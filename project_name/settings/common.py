@@ -5,6 +5,12 @@ from os.path import abspath, basename, dirname, join, normpath
 
 
 ###########################################################
+# DEBUG CONFIGURATION
+
+DEBUG = False
+
+
+###########################################################
 # PATH CONFIGURATION
 
 # Fetch Django's project directory
@@ -15,17 +21,6 @@ PROJECT_ROOT = dirname(DJANGO_ROOT)
 
 # The name of the whole site
 SITE_NAME = basename(DJANGO_ROOT)
-
-# Collect static files here
-STATIC_ROOT = join(PROJECT_ROOT, 'run', 'static')
-
-# Collect media files here
-MEDIA_ROOT = join(PROJECT_ROOT, 'run', 'media')
-
-# look for static assets here
-STATICFILES_DIRS = [
-    join(PROJECT_ROOT, 'static'),
-]
 
 # look for templates here
 # This is an internal setting, used in the TEMPLATES directive
@@ -38,10 +33,80 @@ sys.path.append(normpath(join(PROJECT_ROOT, 'apps')))
 
 
 ###########################################################
+# STATIC FILE CONFIGURATION
+
+# Collect static files here
+STATIC_ROOT = join(PROJECT_ROOT, 'run', 'static')
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
+STATIC_URL = '/static/'
+
+# look for static assets here
+STATICFILES_DIRS = [
+    join(PROJECT_ROOT, 'static'),
+]
+
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+
+###########################################################
+# MEDIA CONFIGURATION
+
+# Collect media files here
+MEDIA_ROOT = join(PROJECT_ROOT, 'run', 'media')
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#media-url
+MEDIA_URL = '/media/'
+
+
+###########################################################
+# FIXTURE CONFIGURATION
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
+FIXTURE_DIRS = (
+    normpath(join(PROJECT_ROOT, 'fixtures')),
+)
+
+
+###########################################################
+# DJANGO RUNNING CONFIGURATION
+
+# The default WSGI application
+WSGI_APPLICATION = '{}.wsgi.application'.format(SITE_NAME)
+
+# The root URL configuration
+ROOT_URLCONF = '{}.urls'.format(SITE_NAME)
+
+# This site's ID
+SITE_ID = 1
+
+
+###########################################################
+# INTERNATIONALIZATION
+
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'America/Los_Angeles'
+
+# Internationalization
+USE_I18N = True
+
+# Localisation
+USE_L10N = True
+
+# Timezone awareness
+USE_TZ = True
+
+
+###########################################################
 # APPLICATION CONFIGURATION
 
-# This are the apps
-DEFAULT_APPS = [
+# Apps
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,8 +115,22 @@ DEFAULT_APPS = [
     'django.contrib.staticfiles',
 ]
 
-# Middlewares
+THIRD_PARTY_APPS = [
+    # Asynchronous task queue:
+    'djcelery',
+
+    # Static file management:
+    'compressor',
+]
+
+LOCAL_APPS = [
+]
+
+COMMON_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+# Middleware
 MIDDLEWARE_CLASSES = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -59,87 +138,60 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
 ]
 
-# Template stuff
+# Jinja2 templates
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
         'DIRS': PROJECT_TEMPLATES,
         'APP_DIRS': True,
         'OPTIONS': {
-            'context_processors': [
-                'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.debug',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
-                'django.contrib.messages.context_processors.messages'
-            ],
+            'environment': '{}.jinja2.environment'.format(SITE_NAME)[,
         },
     },
 ]
 
 
 ###########################################################
-# SECURITY CONFIGURATION
+# CELERY CONFIGURATION
+
+# See: http://celery.readthedocs.org/en/latest/configuration.html#celery-task-result-expires
+CELERY_TASK_RESULT_EXPIRES = timedelta(minutes=30)
+
+# See: http://docs.celeryproject.org/en/master/configuration.html#std:setting-CELERY_CHORD_PROPAGATES
+CELERY_CHORD_PROPAGATES = True
+
+# See: http://celery.github.com/celery/django/
+setup_loader()
+
+
+###########################################################
+# COMPRESSION CONFIGURATION
+# See: http://django_compressor.readthedocs.org/en/latest/settings/#django.conf.settings.COMPRESS_ENABLED
+COMPRESS_ENABLED = True
+
+# See: http://django-compressor.readthedocs.org/en/latest/settings/#django.conf.settings.COMPRESS_CSS_HASHING_METHOD
+COMPRESS_CSS_HASHING_METHOD = 'content'
+
+# See: http://django_compressor.readthedocs.org/en/latest/settings/#django.conf.settings.COMPRESS_CSS_FILTERS
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.template.TemplateFilter',
+]
+
+
+###########################################################
+# SECURITY/ADMIN/SECRET CONFIGURATION
 
 # We store the secret key here
-# The required SECRET_KEY is fetched at the end of this file
 SECRET_FILE = normpath(join(PROJECT_ROOT, 'run', 'SECRET.key'))
 
 # These persons receive error notification
 ADMINS = (
-    ('your name', 'your_name@example.com'),
+    ('Andrew Girardeau-Dale', 'agirardeaudale@gmail.com'),
 )
 MANAGERS = ADMINS
 
-
-###########################################################
-# DJANGO RUNNING CONFIGURATION
-
-# The default WSGI application
-WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
-
-# The root URL configuration
-ROOT_URLCONF = '%s.urls' % SITE_NAME
-
-# This site's ID
-SITE_ID = 1
-
-# The URL for static files
-STATIC_URL = '/static/'
-
-# The URL for media files
-MEDIA_URL = '/media/'
-
-
-###########################################################
-# DEBUG CONFIGURATION
-
-DEBUG = False
-
-
-###########################################################
-# INTERNATIONALIZATION
-
-LANGUAGE_CODE = 'de'
-TIME_ZONE = 'Europe/Berlin'
-
-# Internationalization
-USE_I18N = True
-
-# Localisation
-USE_L10N = True
-
-# enable timezone awareness by default
-USE_TZ = True
-
-
-###########################################################
-# SECRET KEY
 try:
     SECRET_KEY = open(SECRET_FILE).read().strip()
 except IOError:
