@@ -10,6 +10,12 @@ from {{ project_name }}.settings.common import *
 
 
 ###########################################################
+# DEBUG CONFIGURATION
+
+DEBUG = False
+
+
+###########################################################
 # EMAIL CONFIGURATION
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
