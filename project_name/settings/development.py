@@ -1,15 +1,16 @@
-# Import some utility functions
+"""Development settings and globals."""
+
 from os.path import join
-# Fetch our common settings
 from {{ project_name }}.settings.common import *
 
-# #########################################################
 
-# ##### DEBUG CONFIGURATION ###############################
+###########################################################
+# DEBUG CONFIGURATION
 DEBUG = True
 
 
-# ##### DATABASE CONFIGURATION ############################
+###########################################################
+# DATABASE CONFIGURATION
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -17,6 +18,7 @@ DATABASES = {
     }
 }
 
-# ##### APPLICATION CONFIGURATION #########################
 
+###########################################################
+# APPLICATION CONFIGURATION
 INSTALLED_APPS = DEFAULT_APPS

@@ -1,11 +1,11 @@
-# Import sys (to adjust Python path)
+"""Common settings and globals."""
+
 import sys
-# Import some utility functions
 from os.path import abspath, basename, dirname, join, normpath
 
-# #########################################################
 
-# ##### PATH CONFIGURATION ################################
+###########################################################
+# PATH CONFIGURATION
 
 # Fetch Django's project directory
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
@@ -37,7 +37,8 @@ PROJECT_TEMPLATES = [
 sys.path.append(normpath(join(PROJECT_ROOT, 'apps')))
 
 
-# ##### APPLICATION CONFIGURATION #########################
+###########################################################
+# APPLICATION CONFIGURATION
 
 # This are the apps
 DEFAULT_APPS = [
@@ -82,7 +83,8 @@ TEMPLATES = [
 ]
 
 
-# ##### SECURITY CONFIGURATION ############################
+###########################################################
+# SECURITY CONFIGURATION
 
 # We store the secret key here
 # The required SECRET_KEY is fetched at the end of this file
@@ -95,7 +97,8 @@ ADMINS = (
 MANAGERS = ADMINS
 
 
-# ##### DJANGO RUNNING CONFIGURATION ######################
+###########################################################
+# DJANGO RUNNING CONFIGURATION
 
 # The default WSGI application
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME
@@ -113,11 +116,14 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 
-# ##### DEBUG CONFIGURATION ###############################
+###########################################################
+# DEBUG CONFIGURATION
+
 DEBUG = False
 
 
-# ##### INTERNATIONALIZATION ##############################
+###########################################################
+# INTERNATIONALIZATION
 
 LANGUAGE_CODE = 'de'
 TIME_ZONE = 'Europe/Berlin'
@@ -132,7 +138,8 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Finally grab the SECRET KEY
+###########################################################
+# SECRET KEY
 try:
     SECRET_KEY = open(SECRET_FILE).read().strip()
 except IOError:
