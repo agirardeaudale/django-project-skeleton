@@ -6,7 +6,7 @@ from memcacheify import memcacheify
 from postgresify import postgresify
 from S3 import CallingFormat
 
-from {{ project_name }}.settings.common import *
+from .common import *
 
 
 ###########################################################

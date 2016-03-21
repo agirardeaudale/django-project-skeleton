@@ -1,7 +1,7 @@
 """Development settings and globals."""
 
 from os.path import join
-from {{ project_name }}.settings.common import *
+from .common import *
 
 
 ###########################################################
