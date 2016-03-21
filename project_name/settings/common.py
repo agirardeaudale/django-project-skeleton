@@ -2,6 +2,9 @@
 
 import sys
 from os.path import abspath, basename, dirname, join, normpath
+from datetime import timedelta
+
+from djcelery import setup_loader
 
 
 ###########################################################
