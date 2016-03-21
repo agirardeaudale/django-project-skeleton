@@ -1,4 +1,4 @@
-rm -rf docs
+rm -rf doc
 rm README.rst
 mkdir configs
 mkdir run
