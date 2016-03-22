@@ -10,7 +10,7 @@ from djcelery import setup_loader
 ###########################################################
 # DEBUG CONFIGURATION
 
-DEBUG = False
+DEBUG = True
 
 
 ###########################################################
